@@ -417,3 +417,9 @@ footer{justify-content:center;flex-wrap:wrap;gap:10px}
   color: var(--muted);
   padding: 12px 4px;
 }
+
+#remaining {
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--accent);
+}
