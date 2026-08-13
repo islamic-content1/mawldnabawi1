@@ -418,8 +418,38 @@ footer{justify-content:center;flex-wrap:wrap;gap:10px}
   padding: 12px 4px;
 }
 
+.remaining-card {
+  margin-top: 18px;
+  padding: 18px 16px;
+  text-align: center;
+  background: linear-gradient(
+    135deg,
+    #EFE4D8,
+    #FAF6F1
+  );
+  border: 1px solid #EADFD3;
+  border-radius: 22px;
+  box-shadow: 0 10px 24px rgba(122, 92, 67, 0.08);
+}
+
+.remaining-label {
+  display: block;
+  font-size: 16px;
+  color: #7B6B61;
+  margin-bottom: 5px;
+}
+
 #remaining {
-  font-size: 34px;
+  display: block;
+  font-size: 38px;
+  line-height: 1.2;
   font-weight: 700;
-  color: var(--accent);
+  color: #7A5C43;
+}
+
+.remaining-note {
+  display: block;
+  margin-top: 5px;
+  font-size: 14px;
+  color: #7B6B61;
 }
