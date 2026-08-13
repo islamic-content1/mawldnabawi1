@@ -1,13 +1,10 @@
 {
-  "name": "صلّوا عليه ﷺ",
-  "short_name": "صلّوا عليه",
-  "description": "عداد جماعي للصلاة على النبي ﷺ",
+  "name": "ذكر الحبيب",
+  "short_name": "ذكر الحبيب",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#f7f1ea",
-  "theme_color": "#7a5c43",
-  "lang": "ar",
-  "dir": "rtl",
+  "background_color": "#F7F1EA",
+  "theme_color": "#7A5C43",
   "icons": [
     {
       "src": "icons/icon-192.png",
