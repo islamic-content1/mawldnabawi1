@@ -4,7 +4,7 @@ document.querySelectorAll(".tab-btn").forEach(btn=>{btn.addEventListener("click"
    عدّلي هذا الرابط فقط
    بعد نشر Google Apps Script
    ========================= */
-const API_URL = "PUT_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+const API_URL = "https://script.google.com/macros/s/AKfycby55e_04YmYG241oyYhQ4c9XfJCMYeVVT7nUW7U6wQ8GgrLAqJPVqmzXp3HX5AVB-GZ/exec";
 
 const GOAL = 200000;
 const START_DATE = "2026-08-14";
