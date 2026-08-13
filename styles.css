@@ -30,6 +30,12 @@ body {
            max(16px, env(safe-area-inset-right))
            max(26px, env(safe-area-inset-bottom))
            max(16px, env(safe-area-inset-left));
+
+  background:
+    linear-gradient(rgba(247, 241, 234, 0.88), rgba(247, 241, 234, 0.88)),
+    url("icons/background.png") center center / cover fixed no-repeat;
+
+  color: var(--text);
 }
 
 button, input { font: inherit; }
