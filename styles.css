@@ -1,0 +1,413 @@
+
+:root {
+  --bg: #f7f1ea;
+  --card: rgba(255,255,255,.86);
+  --text: #33261f;
+  --muted: #7b6b61;
+  --accent: #7a5c43;
+  --accent-2: #b49473;
+  --line: #eadfd3;
+  --success: #2e7d56;
+  --danger: #a94343;
+  --shadow: 0 18px 50px rgba(74, 48, 31, .08);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  min-height: 100%;
+  margin: 0;
+  background:
+    radial-gradient(circle at 90% 10%, rgba(180,148,115,.12), transparent 28%),
+    radial-gradient(circle at 10% 90%, rgba(122,92,67,.08), transparent 25%),
+    var(--bg);
+  color: var(--text);
+  font-family: "Amiri", serif;
+}
+
+body {
+  padding: max(18px, env(safe-area-inset-top))
+           max(16px, env(safe-area-inset-right))
+           max(26px, env(safe-area-inset-bottom))
+           max(16px, env(safe-area-inset-left));
+}
+
+button, input { font: inherit; }
+
+.shell {
+  width: min(100%, 620px);
+  margin: 0 auto;
+  display: grid;
+  gap: 16px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,.9);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+  padding: 22px;
+}
+
+.hero {
+  text-align: center;
+  padding-top: 28px;
+}
+
+.eyebrow {
+  display: inline-block;
+  background: #efe4d8;
+  color: var(--accent);
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+h1 {
+  margin: 14px 0 8px;
+  font-size: clamp(30px, 8vw, 46px);
+  line-height: 1.15;
+}
+
+.subtitle {
+  color: var(--muted);
+  line-height: 1.8;
+  margin: 0 auto 24px;
+  max-width: 480px;
+}
+
+.counter-wrap {
+  padding: 20px 14px 18px;
+}
+
+.counter-label, .counter-suffix {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.counter {
+  font-size: clamp(44px, 14vw, 72px);
+  font-weight: 900;
+  letter-spacing: -2px;
+  color: var(--accent);
+  margin: 2px 0 4px;
+}
+
+.progress-track {
+  height: 13px;
+  background: #eee2d6;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid #eadacc;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  transition: width .5s ease;
+}
+
+.progress-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.stat {
+  background: #faf6f1;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 14px 8px;
+}
+
+.stat-title {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.stat strong {
+  font-size: 16px;
+}
+
+.form-card h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+}
+
+.muted {
+  margin: 0 0 20px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+label {
+  display: block;
+  margin: 14px 2px 8px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+input {
+  width: 100%;
+  border: 1.5px solid var(--line);
+  background: #fff;
+  padding: 15px 16px;
+  border-radius: 16px;
+  outline: none;
+  color: var(--text);
+  transition: .2s ease;
+}
+
+input:focus {
+  border-color: var(--accent-2);
+  box-shadow: 0 0 0 4px rgba(180,148,115,.12);
+}
+
+.quick-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 10px 0 16px;
+}
+
+.quick-buttons button {
+  border: 1px solid var(--line);
+  background: #faf6f1;
+  color: var(--accent);
+  border-radius: 14px;
+  padding: 11px 8px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primary, .secondary {
+  width: 100%;
+  border: 0;
+  border-radius: 16px;
+  padding: 15px 18px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(122,92,67,.18);
+}
+
+.primary:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.secondary {
+  background: #efe4d8;
+  color: var(--accent);
+}
+
+.message {
+  min-height: 20px;
+  margin: 12px 2px 0;
+  font-size: 14px;
+  text-align: center;
+}
+
+.message.ok { color: var(--success); }
+.message.err { color: var(--danger); }
+
+.personal-card {
+  display: grid;
+  gap: 14px;
+  text-align: center;
+}
+
+.personal-card strong {
+  display: block;
+  font-size: 30px;
+  color: var(--accent);
+}
+
+.ios-hint {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 13px;
+}
+
+.intention-card {
+  text-align: center;
+  line-height: 1.9;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+  padding: 2px 6px;
+  font-size: 13px;
+}
+
+.link-btn {
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.hidden { display: none !important; }
+
+@media (max-width: 420px) {
+  .card { border-radius: 24px; padding: 18px; }
+  .stats-grid { gap: 7px; }
+  .stat { padding: 12px 5px; }
+  .counter { letter-spacing: -1px; }
+}
+
+
+textarea {
+  width: 100%;
+  border: 1.5px solid var(--line);
+  background: #fff;
+  padding: 15px 16px;
+  border-radius: 16px;
+  outline: none;
+  color: var(--text);
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.8;
+  font: inherit;
+  transition: .2s ease;
+}
+
+textarea:focus {
+  border-color: var(--accent-2);
+  box-shadow: 0 0 0 4px rgba(180,148,115,.12);
+}
+
+.intentions-card h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+}
+
+.intentions-list-wrap {
+  margin-top: 20px;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+
+.intentions-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.intentions-list {
+  display: grid;
+  gap: 10px;
+  max-height: 430px;
+  overflow: auto;
+  padding-left: 2px;
+}
+
+.intention-item {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 10px;
+  align-items: start;
+  background: #faf6f1;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 14px;
+}
+
+.intention-heart {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  background: #efe4d8;
+  border-radius: 50%;
+}
+
+.intention-item p {
+  margin: 2px 0 0;
+  line-height: 1.8;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.empty-intentions {
+  text-align: center;
+  color: var(--muted);
+  padding: 20px 8px;
+}
+
+body,button,input,textarea{font-family:"Amiri",serif}
+.tabs{position:sticky;top:8px;z-index:20;display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:8px;border-radius:20px}
+.tab-btn{border:0;background:transparent;color:var(--muted);border-radius:14px;padding:10px 5px;font-size:18px;font-weight:700;cursor:pointer}
+.tab-btn.active{background:#efe4d8;color:var(--accent)}
+.tab-panel{display:none}.tab-panel.active{display:grid;gap:16px}
+.prayer-accordion{margin-top:10px;border:1px solid var(--line);border-radius:17px;background:#faf6f1;overflow:hidden}
+.prayer-accordion summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;padding:15px 16px;font-size:18px;font-weight:700}
+.prayer-accordion summary::-webkit-details-marker{display:none}
+.prayer-accordion summary span{margin-inline-start:auto;color:var(--muted);font-size:14px;font-weight:400}
+.prayer-accordion summary:after{content:"＋";color:var(--accent);font-size:22px}.prayer-accordion[open] summary:after{content:"−"}
+.prayer-pages{border-top:1px solid var(--line);padding:8px;background:white;display:grid;gap:8px;max-height:72vh;overflow:auto}
+.prayer-pages img{display:block;width:100%;height:auto;border-radius:10px}
+.footer-dua{text-align:center;line-height:1.8;font-size:17px;color:var(--accent);font-weight:700}
+footer{justify-content:center;flex-wrap:wrap;gap:10px}
+
+.prayer-text {
+  border-top: 1px solid var(--line);
+  padding: 10px 16px 18px;
+  background: #fff;
+}
+.salawat-list {
+  margin: 0;
+  padding: 0 26px 0 0;
+}
+.salawat-list li {
+  padding: 13px 6px;
+  line-height: 2.05;
+  font-size: 19px;
+  border-bottom: 1px solid #f0e7de;
+}
+.salawat-list li:last-child { border-bottom: 0; }
+.dua-text p {
+  margin: 0;
+  padding: 12px 2px;
+  line-height: 2.1;
+  font-size: 18px;
+}
+.source-note {
+  line-height: 1.9;
+  color: var(--muted);
+  padding: 12px 4px;
+}
