@@ -1,10 +1,20 @@
-document.querySelectorAll(".tab-btn").forEach(btn => {
+document.querySelectorAll(".tab-btn").forEach((btn) => {
   btn.addEventListener("click", () => {
-    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-    document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+    document
+      .querySelectorAll(".tab-btn")
+      .forEach((b) => b.classList.remove("active"));
+
+    document
+      .querySelectorAll(".tab-panel")
+      .forEach((p) => p.classList.remove("active"));
 
     btn.classList.add("active");
-    document.getElementById(btn.dataset.tab)?.classList.add("active");
+
+    const panel = document.getElementById(btn.dataset.tab);
+
+    if (panel) {
+      panel.classList.add("active");
+    }
 
     window.scrollTo({
       top: 0,
@@ -14,147 +24,256 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
 });
 
 
+/* =========================
+   Google Apps Script
+   ========================= */
+
 const API_URL =
   "https://script.google.com/macros/s/AKfycby55e_04YmYG241oyYhQ4c9XfJCMYeVVT7nUW7U6wQ8GgrLAqJPVqmzXp3HX5AVB-GZ/exec";
 
 
+/* =========================
+   إعدادات الحملة
+   ========================= */
+
 const GOAL = 200000;
+
 const START_DATE = "2026-08-14";
+
 const TOTAL_DAYS = 12;
 
+
+/* =========================
+   العناصر
+   ========================= */
 
 const $ = (id) => document.getElementById(id);
 
 
 const totalCount = $("totalCount");
+
 const progressBar = $("progressBar");
+
 const progressText = $("progressText");
+
 const remaining = $("remaining");
+
 const dayNumber = $("dayNumber");
 
+
 const amountInput = $("amount");
+
 const submitBtn = $("submitBtn");
+
 const submitText = $("submitText");
+
 const message = $("message");
 
+
 const myTotal = $("myTotal");
+
 const refreshBtn = $("refreshBtn");
 
 
 const intentionInput = $("intentionInput");
+
 const addIntentionBtn = $("addIntentionBtn");
+
 const intentionMessage = $("intentionMessage");
+
 const intentionsList = $("intentionsList");
+
 const refreshIntentionsBtn = $("refreshIntentionsBtn");
 
 
+/* =========================
+   تنسيق الأرقام
+   ========================= */
 
-function fmt(n) {
-  return Number(n || 0).toLocaleString("en-US");
+function fmt(number) {
+  return Number(number || 0).toLocaleString("en-US");
 }
 
 
+/* تحويل الأرقام العربية والفارسية إلى إنجليزية
+
+   ١٢٣٤ → 1234
+   ۱۲۳۴ → 1234
+*/
+
+function normalizeDigits(value) {
+  return String(value)
+    .replace(/[٠-٩]/g, (digit) =>
+      "٠١٢٣٤٥٦٧٨٩".indexOf(digit)
+    )
+    .replace(/[۰-۹]/g, (digit) =>
+      "۰۱۲۳۴۵۶۷۸۹".indexOf(digit)
+    )
+    .replace(/,/g, "")
+    .replace(/،/g, "")
+    .trim();
+}
+
+
+/* =========================
+   الرسائل
+   ========================= */
 
 function setMessage(text, type = "") {
   message.textContent = text;
-  message.className = `message ${type}`.trim();
+
+  message.className =
+    `message ${type}`.trim();
 }
 
 
+function setIntentionMessage(
+  text,
+  type = ""
+) {
+  intentionMessage.textContent = text;
+
+  intentionMessage.className =
+    `message ${type}`.trim();
+}
+
+
+/* =========================
+   اليوم الحالي
+   ========================= */
 
 function getCampaignDay() {
-  const start = new Date(`${START_DATE}T00:00:00`);
-  const now = new Date();
+  const start =
+    new Date(`${START_DATE}T00:00:00`);
 
-  const diff =
-    Math.floor((now - start) / 86400000) + 1;
+  const now =
+    new Date();
+
+
+  const difference =
+    Math.floor(
+      (now - start) / 86400000
+    ) + 1;
+
 
   return Math.min(
     TOTAL_DAYS,
-    Math.max(1, diff)
+    Math.max(1, difference)
   );
 }
 
 
+/* =========================
+   عرض العداد
+   ========================= */
 
 function renderStats(total = 0) {
-
-  total = Number(total || 0);
-
-  totalCount.textContent = fmt(total);
+  total =
+    Number(total || 0);
 
 
-  const rem = Math.max(
-    0,
-    GOAL - total
-  );
-
-  remaining.textContent = fmt(rem);
+  totalCount.textContent =
+    fmt(total);
 
 
-  const rawPct =
+  /* المتبقي */
+
+  const remainingAmount =
+    Math.max(
+      0,
+      GOAL - total
+    );
+
+
+  remaining.textContent =
+    fmt(remainingAmount);
+
+
+  /* النسبة */
+
+  const rawPercent =
     (total / GOAL) * 100;
 
 
-  const pct =
-    Math.min(100, rawPct);
+  /* الشريط يتوقف عند 100%
+     لكن الرقم نفسه يستمر فوق 200 ألف
+  */
+
+  const barPercent =
+    Math.min(
+      100,
+      rawPercent
+    );
 
 
   progressBar.style.width =
-    `${pct}%`;
+    `${barPercent}%`;
 
+
+  /* لو تجاوزنا الهدف */
 
   if (total > GOAL) {
-
     progressText.textContent =
-      `${rawPct.toFixed(0)}% — تجاوزنا الهدف 🤍`;
-
-  } else {
-
-    progressText.textContent =
-      `${rawPct.toFixed(rawPct >= 10 ? 0 : 1)}%`;
-
+      `${rawPercent.toFixed(0)}% — تجاوزنا الهدف 🤍`;
   }
 
+  else {
+    progressText.textContent =
+      `${rawPercent.toFixed(
+        rawPercent >= 10 ? 0 : 1
+      )}%`;
+  }
+
+
+  /* رقم اليوم */
 
   dayNumber.textContent =
     `${getCampaignDay()} / ${TOTAL_DAYS}`;
 }
 
 
+/* =========================
+   مجموع هذه البنت على جهازها
+   ========================= */
 
 function renderMyTotal() {
-
   const value =
     Number(
-      localStorage.getItem("salawat_my_total") || 0
+      localStorage.getItem(
+        "salawat_my_total"
+      ) || 0
     );
+
 
   myTotal.textContent =
     fmt(value);
 }
 
 
+/* =========================
+   التأكد من وجود الرابط
+   ========================= */
 
 function apiReady() {
-
   return (
     API_URL &&
     !API_URL.includes("PUT_YOUR")
   );
-
 }
 
 
+/* =========================
+   تحميل العداد
+   ========================= */
 
 async function loadStats() {
-
-  if (!apiReady()) return;
+  if (!apiReady()) {
+    return;
+  }
 
 
   try {
-
-    const res =
+    const response =
       await fetch(
         `${API_URL}?action=stats&t=${Date.now()}`,
         {
@@ -165,87 +284,102 @@ async function loadStats() {
 
 
     const data =
-      await res.json();
+      await response.json();
 
 
     if (!data.ok) {
-
       throw new Error(
         data.error ||
         "تعذر تحميل العداد"
       );
-
     }
 
 
     renderStats(
       data.total
     );
+  }
 
-
-  } catch (err) {
-
+  catch (error) {
     setMessage(
       "تعذّر تحديث العداد الآن. جرّبي مرة ثانية.",
       "err"
     );
 
-    console.error(err);
 
+    console.error(error);
   }
-
 }
 
 
+/* =========================
+   إضافة عدد جديد
+   ========================= */
 
 async function addAmount() {
 
-  const amount =
-    Math.floor(
-      Number(amountInput.value)
+  /* نحول أي أرقام عربية أولاً */
+
+  const normalizedValue =
+    normalizeDigits(
+      amountInput.value
     );
 
 
+  const amount =
+    Number(
+      normalizedValue
+    );
+
+
+  /* لازم يكون رقم صحيح وأكبر من صفر */
+
   if (
     !Number.isFinite(amount) ||
-    amount <= 0
+    amount <= 0 ||
+    !Number.isInteger(amount)
   ) {
-
     setMessage(
       "اكتبي عدد صحيح أكبر من صفر 🤍",
       "err"
     );
 
+
     amountInput.focus();
 
     return;
-
   }
 
 
-  if (amount > 100000) {
+  /* حماية من رقم ضخم يُكتب بالغلط
+     هذا لا علاقة له بهدف 200 ألف.
+     يمكن للمجموع الكلي تجاوز 200 ألف عادي.
+  */
 
+  if (amount > 100000) {
     setMessage(
       "تأكدي من العدد قبل الإضافة.",
       "err"
     );
 
     return;
-
   }
 
 
-  if (!apiReady()) return;
+  if (!apiReady()) {
+    return;
+  }
 
 
-  submitBtn.disabled = true;
+  submitBtn.disabled =
+    true;
+
 
   submitText.textContent =
     "بنضيف العدد...";
 
 
   try {
-
     const payload =
       new URLSearchParams();
 
@@ -262,7 +396,7 @@ async function addAmount() {
     );
 
 
-    const res =
+    const response =
       await fetch(
         API_URL,
         {
@@ -273,20 +407,20 @@ async function addAmount() {
 
 
     const data =
-      await res.json();
+      await response.json();
 
 
     if (!data.ok) {
-
       throw new Error(
         data.error ||
         "تعذر الحفظ"
       );
-
     }
 
 
-    const currentMine =
+    /* مجموع البنت على جهازها */
+
+    const currentPersonalTotal =
       Number(
         localStorage.getItem(
           "salawat_my_total"
@@ -294,10 +428,15 @@ async function addAmount() {
       );
 
 
+    const newPersonalTotal =
+      currentPersonalTotal +
+      amount;
+
+
     localStorage.setItem(
       "salawat_my_total",
       String(
-        currentMine + amount
+        newPersonalTotal
       )
     );
 
@@ -305,10 +444,14 @@ async function addAmount() {
     renderMyTotal();
 
 
+    /* تحديث المجموع الجماعي */
+
     renderStats(
       data.total
     );
 
+
+    /* تفريغ الخانة */
 
     amountInput.value =
       "";
@@ -320,80 +463,80 @@ async function addAmount() {
     );
 
 
+    /* اهتزاز خفيف على الأجهزة الداعمة */
+
     if (navigator.vibrate) {
-
       navigator.vibrate(40);
-
     }
+  }
 
-
-  } catch (err) {
-
+  catch (error) {
     setMessage(
       "صار خطأ بالحفظ. جرّبي مرة ثانية.",
       "err"
     );
 
-    console.error(err);
 
+    console.error(error);
+  }
 
-  } finally {
-
+  finally {
     submitBtn.disabled =
       false;
 
 
     submitText.textContent =
       "أضيفي للمجموع 🤍";
-
   }
-
 }
 
 
-
-function setIntentionMessage(
-  text,
-  type = ""
-) {
-
-  intentionMessage.textContent =
-    text;
-
-
-  intentionMessage.className =
-    `message ${type}`.trim();
-
-}
-
-
+/* =========================
+   حماية نص النوايا
+   ========================= */
 
 function escapeHtml(value) {
-
   return String(value)
 
-    .replaceAll("&", "&amp;")
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
 
-    .replaceAll("<", "&lt;")
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
 
-    .replaceAll(">", "&gt;")
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
 
-    .replaceAll('"', "&quot;")
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
 
-    .replaceAll("'", "&#039;");
-
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 }
 
 
+/* =========================
+   تحميل النوايا
+   ========================= */
 
 async function loadIntentions() {
-
-  if (!apiReady()) return;
+  if (!apiReady()) {
+    return;
+  }
 
 
   try {
-
-    const res =
+    const response =
       await fetch(
         `${API_URL}?action=intentions&t=${Date.now()}`,
         {
@@ -404,16 +547,14 @@ async function loadIntentions() {
 
 
     const data =
-      await res.json();
+      await response.json();
 
 
     if (!data.ok) {
-
       throw new Error(
         data.error ||
         "تعذر تحميل النوايا"
       );
-
     }
 
 
@@ -425,47 +566,49 @@ async function loadIntentions() {
         : [];
 
 
-    if (!items.length) {
+    /* إذا ما في نوايا
+       ما نظهر أي جملة
+    */
 
+    if (!items.length) {
       intentionsList.innerHTML =
         "";
 
       return;
-
     }
 
 
     intentionsList.innerHTML =
       items
         .map(
-          item => `
+          (item) => `
+            <article class="intention-item">
 
-          <article class="intention-item">
+              <div class="intention-heart">
+                🤍
+              </div>
 
-            <div class="intention-heart">
-              🤍
-            </div>
+              <p>
+                ${escapeHtml(
+                  item.text || ""
+                )}
+              </p>
 
-            <p>
-              ${escapeHtml(item.text || "")}
-            </p>
-
-          </article>
-
-        `
+            </article>
+          `
         )
         .join("");
-
-
-  } catch (err) {
-
-    console.error(err);
-
   }
 
+  catch (error) {
+    console.error(error);
+  }
 }
 
 
+/* =========================
+   إضافة نية
+   ========================= */
 
 async function addIntention() {
 
@@ -474,20 +617,21 @@ async function addIntention() {
 
 
   if (text.length < 2) {
-
     setIntentionMessage(
       "اكتبي نيتك أول 🤍",
       "err"
     );
 
+
     intentionInput.focus();
 
     return;
-
   }
 
 
-  if (!apiReady()) return;
+  if (!apiReady()) {
+    return;
+  }
 
 
   addIntentionBtn.disabled =
@@ -499,7 +643,6 @@ async function addIntention() {
 
 
   try {
-
     const payload =
       new URLSearchParams();
 
@@ -516,7 +659,7 @@ async function addIntention() {
     );
 
 
-    const res =
+    const response =
       await fetch(
         API_URL,
         {
@@ -527,16 +670,14 @@ async function addIntention() {
 
 
     const data =
-      await res.json();
+      await response.json();
 
 
     if (!data.ok) {
-
       throw new Error(
         data.error ||
         "تعذر حفظ النية"
       );
-
     }
 
 
@@ -551,65 +692,72 @@ async function addIntention() {
 
 
     await loadIntentions();
+  }
 
-
-  } catch (err) {
-
+  catch (error) {
     setIntentionMessage(
       "صار خطأ بالحفظ. جرّبي مرة ثانية.",
       "err"
     );
 
-    console.error(err);
 
+    console.error(error);
+  }
 
-  } finally {
-
+  finally {
     addIntentionBtn.disabled =
       false;
 
 
     addIntentionBtn.textContent =
       "أضيفي النية 🤍";
-
   }
-
 }
 
 
+/* =========================
+   أزرار +100 / +500 / +1000
+   ========================= */
 
 document
   .querySelectorAll("[data-add]")
-  .forEach(btn => {
+  .forEach(
+    (button) => {
 
-    btn.addEventListener(
-      "click",
-      () => {
+      button.addEventListener(
+        "click",
+        () => {
 
-        const add =
-          Number(
-            btn.dataset.add || 0
-          );
-
-
-        const current =
-          Number(
-            amountInput.value || 0
-          );
+          const add =
+            Number(
+              button.dataset.add ||
+              0
+            );
 
 
-        amountInput.value =
-          current + add;
+          const current =
+            Number(
+              normalizeDigits(
+                amountInput.value
+              )
+            ) || 0;
 
 
-        amountInput.focus();
-
-      }
-    );
-
-  });
+          amountInput.value =
+            current + add;
 
 
+          amountInput.focus();
+        }
+      );
+
+    }
+  );
+
+
+/* =========================
+   زر إضافة العدد
+   ========================= */
 
 submitBtn.addEventListener(
   "click",
@@ -617,6 +765,9 @@ submitBtn.addEventListener(
 );
 
 
+/* =========================
+   زر إضافة النية
+   ========================= */
 
 addIntentionBtn.addEventListener(
   "click",
@@ -624,6 +775,9 @@ addIntentionBtn.addEventListener(
 );
 
 
+/* =========================
+   تحديث النوايا
+   ========================= */
 
 refreshIntentionsBtn.addEventListener(
   "click",
@@ -631,6 +785,9 @@ refreshIntentionsBtn.addEventListener(
 );
 
 
+/* =========================
+   تحديث العداد
+   ========================= */
 
 refreshBtn.addEventListener(
   "click",
@@ -639,31 +796,34 @@ refreshBtn.addEventListener(
     setMessage("");
 
     loadStats();
-
   }
 );
 
 
+/* =========================
+   Enter يضيف العدد
+   ========================= */
 
 amountInput.addEventListener(
   "keydown",
-  e => {
+  (event) => {
 
-    if (e.key === "Enter") {
-
+    if (
+      event.key === "Enter"
+    ) {
       addAmount();
-
     }
-
   }
 );
 
 
+/* =========================
+   Service Worker
+   ========================= */
 
 if (
   "serviceWorker" in navigator
 ) {
-
   window.addEventListener(
     "load",
     () => {
@@ -673,16 +833,18 @@ if (
         .register(
           "./service-worker.js"
         )
+
         .catch(
           console.error
         );
-
     }
   );
-
 }
 
 
+/* =========================
+   أول تحميل
+   ========================= */
 
 renderStats(0);
 
@@ -693,12 +855,19 @@ loadStats();
 loadIntentions();
 
 
+/* =========================
+   تحديث تلقائي
+   ========================= */
+
+/* العداد كل 20 ثانية */
 
 setInterval(
   loadStats,
   20000
 );
 
+
+/* النوايا كل 30 ثانية */
 
 setInterval(
   loadIntentions,
